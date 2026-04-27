@@ -1,0 +1,75 @@
+services:
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - '9000:9000'
+    depends_on:
+      - sonaqube-db
+    networks:
+      - sonarnet
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://sonaqube-db:5432/sonar
+      - SONAR_JDBC_USERNAME=sonar
+      - SONAR_JDBC_PASSWORD=sonar
+    volumes:
+    - sonarqube_data:/opt/sonarqube/data
+    - sonarqube_logs:/opt/sonarqube/logs
+
+  sonaqube-db:
+    image: postgres:13
+    networks:
+      - sonarnet
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+      - POSTGRES_DB=sonar
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+
+  sonar-scanner:
+    image: sonarsource/sonar-scanner-cli
+    container_name: sonar-scanner-cli
+    volumes:
+      - .:/usr/src
+    environment:
+      - SONAR_HOST_URL=http://sonarqube:9000
+      - SONAR_TOKEN=sqp_e7d4a26f85cc30c972f05e0929956cd0fb3e21e0
+    networks:
+      - sonarnet
+    depends_on:
+      - sonarqube
+    profiles:
+      - analysis 
+
+  redis:
+    image: 'redislabs/redismod'
+    ports:
+      - '6379:6379'
+  web1:
+    restart: on-failure
+    build: ./web
+    hostname: web1
+    ports:
+      - '81:5000'
+  web2:
+    restart: on-failure
+    build: ./web
+    hostname: web2
+    ports:
+      - '82:5000'
+  nginx:
+    build: ./nginx
+    ports:
+    - '8080:80'
+    depends_on:
+    - web1
+    - web2
+
+networks:
+    sonarnet:
+
+volumes:
+  sonarqube_data:
+  sonarqube_logs:
+  postgresql:
+
