@@ -8,12 +8,9 @@ const redisClient = redis.createClient({
 });
 
 
-function test() {}
-function test() {}
-
 app.get('/', function(req, res) {
     redisClient.get('numVisits', function(err, numVisits) {
-        numVisitsToDisplay = parseInt(numVisits) + 1;
+        let numVisitsToDisplay = parseInt(numVisits) + 1;
         if (isNaN(numVisitsToDisplay)) {
             numVisitsToDisplay = 1;
         }
