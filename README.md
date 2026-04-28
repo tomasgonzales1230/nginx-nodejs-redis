@@ -63,7 +63,7 @@ Caso exitoso ✅
 
 - se corrigio el fallo para que los test puedan pasar de forma exitosa
 ```
-![SonarQube exitoso](./docs/img/Jobs%20Successfully.jpeg)
+![SonarQube exitoso](./docs/img/SonarQube_success.jpeg)
 
 ```javascript
 // Código que provocó issues en SonarQube
