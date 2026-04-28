@@ -4,6 +4,11 @@ WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
 RUN npm install
-COPY ./server.js ./
+
+COPY . .
+
+EXPOSE 3000
+
+# COPY ./server.js ./
 
 CMD ["npm","start"]
