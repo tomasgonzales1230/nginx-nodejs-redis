@@ -1,7 +1,12 @@
 ## Prueba Tecnica Devops
 
 
-## Node.js application with Nginx proxy and Redis database
+## Descripción del proyecto
+
+Este proyecto utiliza una aplicación basada en Node.js, Redis y Nginx.
+
+La aplicación web incrementa un contador de visitas almacenado en Redis y Nginx funciona como reverse proxy hacia la aplicación Node.js.
+
 
 Project structure:
 ```
@@ -11,6 +16,7 @@ Project structure:
     ├── compose.yaml
     ├── docs
     │   └── img
+    │       └── Jobs Successfully.jpeg
     ├── environment
     │   ├── ingress.yml
     │   ├── namespace.yml
@@ -63,7 +69,7 @@ Caso exitoso ✅
 
 - se corrigio el fallo para que los test puedan pasar de forma exitosa
 ```
-![SonarQube exitoso](./docs/img/SonarQube_success.jpeg)
+![SonarQube exitoso](./docs/img/Jobs%20Successfully.jpeg)
 
 ```javascript
 // Código que provocó issues en SonarQube
@@ -125,3 +131,32 @@ environment/
 
 - ### Logs de la aplicación
 ![Web logs](./docs/img/web-logs.png)
+
+## Tecnologías utilizadas
+
+- Node.js
+- Redis
+- Nginx
+- Docker
+- DockerHub
+- SonarQube
+- GitHub Actions
+- Self-hosted runner
+- Kubernetes
+- Minikube
+- Ingress Nginx
+
+## Pipeline CI/CD
+
+El pipeline fue implementado con GitHub Actions utilizando un runner self-hosted.
+
+El flujo principal del pipeline incluye:
+
+- Validación del runner.
+- Instalación de dependencias.
+- Ejecución de tests.
+- Análisis con SonarQube.
+- Construcción y publicación de imágenes Docker.
+- Ejecución de scripts requeridos por la prueba técnica.
+
+![Pipeline exitoso](./docs/img/pipeline-success.png)
