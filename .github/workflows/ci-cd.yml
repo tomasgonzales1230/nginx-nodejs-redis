@@ -48,3 +48,23 @@ jobs:
           minikube version || true
 
           echo "Validación finalizada correctamente"
+  node-tests:
+    name: Install dependencies and run Node.js tests
+    runs-on: self-hosted
+    needs: validate-runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        working-directory: ./web
+        run: |
+          echo "Instalando dependencias de Node.js..."
+          npm install
+
+      - name: Run tests
+        working-directory: ./web
+        run: |
+          echo "Ejecutando pruebas unitarias..."
+          npm test
