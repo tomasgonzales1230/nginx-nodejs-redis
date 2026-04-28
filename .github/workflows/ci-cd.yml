@@ -68,3 +68,22 @@ jobs:
         run: |
           echo "Ejecutando pruebas unitarias..."
           npm test
+  sonarqube-analysis:
+    name: SonarQube analysis
+    runs-on: self-hosted
+    needs: node-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run SonarQube analysis
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
