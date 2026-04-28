@@ -1,12 +1,7 @@
 ## Prueba Tecnica Devops
 
 
-## Descripción del proyecto
-
-Este proyecto utiliza una aplicación basada en Node.js, Redis y Nginx.
-
-La aplicación web incrementa un contador de visitas almacenado en Redis y Nginx funciona como reverse proxy hacia la aplicación Node.js.
-
+## Node.js application with Nginx proxy and Redis database
 
 Project structure:
 ```
@@ -16,7 +11,6 @@ Project structure:
     ├── compose.yaml
     ├── docs
     │   └── img
-    │       └── Jobs Successfully.jpeg
     ├── environment
     │   ├── ingress.yml
     │   ├── namespace.yml
@@ -69,7 +63,7 @@ Caso exitoso ✅
 
 - se corrigio el fallo para que los test puedan pasar de forma exitosa
 ```
-![SonarQube exitoso](./docs/img/Jobs%20Successfully.jpeg)
+![SonarQube exitoso](./docs/img/SonarQube_success.jpeg)
 
 ```javascript
 // Código que provocó issues en SonarQube
