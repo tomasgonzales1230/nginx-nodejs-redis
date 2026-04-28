@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate-runner:
+    name: Validate self-hosted runner
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate runner and tools
+        run: |
+          echo "Validando self-hosted runner..."
+          echo "Repositorio clonado correctamente"
+
+          echo "Directorio actual:"
+          pwd
+
+          echo "Archivos del repositorio:"
+          ls -la
+
+          echo "Sistema operativo:"
+          uname -a || true
+
+          echo "Docker version:"
+          docker --version
+
+          echo "Docker compose version:"
+          docker compose version
+
+          echo "Node version:"
+          node --version
+
+          echo "NPM version:"
+          npm --version
+
+          echo "Kubectl version:"
+          kubectl version --client || true
+
+          echo "Minikube version:"
+          minikube version || true
+
+          echo "Validación finalizada correctamente"
