@@ -1,15 +1,25 @@
-const os = require('node:os');
 const express = require('express');
-const createApp = require('./app')
+const createApp = require('./app');
 const redis = require('redis');
 
-const redisClient = redis.createClient({
-  host: 'redis',
-  port: 6379
-});
+function startServer(port = 5000) {
+    const redisClient = redis.createClient({
+        host: 'redis',
+        port: 6379
+    });
 
-const app = createApp(redisClient);
+    const app = createApp(redisClient);
 
-app.listen(5000, function() {
-    console.log('Web application is listening on port 5000');
-});
+    const server = app.listen(port, () => {
+        console.log(`Web application is listening on port ${port}`);
+    });
+
+    return { app, server };
+}
+
+/* istanbul ignore next */
+if (require.main === module) {
+    startServer();
+}
+
+module.exports = startServer;

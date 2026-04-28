@@ -32,14 +32,15 @@ services:
     volumes:
       - .:/usr/src
     environment:
-      - SONAR_HOST_URL=http://sonarqube:9000
-      - SONAR_TOKEN=sqp_e7d4a26f85cc30c972f05e0929956cd0fb3e21e0
+      - SONAR_HOST_URL=http://localhost:9000
+      - SONAR_TOKEN=sqp_a2552e7afa0e00d562a1c370103a669265b42c3f
     networks:
       - sonarnet
     depends_on:
       - sonarqube
     profiles:
-      - analysis 
+     - analysis 
+
 
   redis:
     image: 'redislabs/redismod'
