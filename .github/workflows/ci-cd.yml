@@ -145,3 +145,4 @@ jobs:
         run: |
           echo "Imágenes generadas:"
           docker images | grep -E "${{ env.WEB_IMAGE_NAME }}|${{ env.NGINX_IMAGE_NAME }}" || true
+          
