@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  WEB_IMAGE_NAME: devops-web
+  NGINX_IMAGE_NAME: devops-nginx
+
 jobs:
   validate-runner:
     name: Validate self-hosted runner
@@ -87,4 +91,57 @@ jobs:
         with:
           args: >
             -Dsonar.qualitygate.wait=true
-      
+  
+  docker-build-push:
+    name: Build and push Docker images
+    runs-on: self-hosted
+    needs: sonarqube-analysis
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker
+        run: |
+          echo "Validando Docker..."
+          docker --version
+          docker compose version
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Web image
+        run: |
+          echo "Construyendo imagen Web..."
+          docker build \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.WEB_IMAGE_NAME }}:${{ github.run_number }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.WEB_IMAGE_NAME }}:latest \
+            ./web
+
+      - name: Build Nginx image
+        run: |
+          echo "Construyendo imagen Nginx..."
+          docker build \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NGINX_IMAGE_NAME }}:${{ github.run_number }} \
+            -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NGINX_IMAGE_NAME }}:latest \
+            ./nginx
+
+      - name: Push Web image
+        run: |
+          echo "Subiendo imagen Web a DockerHub..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.WEB_IMAGE_NAME }}:${{ github.run_number }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.WEB_IMAGE_NAME }}:latest
+
+      - name: Push Nginx image
+        run: |
+          echo "Subiendo imagen Nginx a DockerHub..."
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NGINX_IMAGE_NAME }}:${{ github.run_number }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NGINX_IMAGE_NAME }}:latest
+
+      - name: Show local Docker images
+        run: |
+          echo "Imágenes generadas:"
+          docker images | grep -E "${{ env.WEB_IMAGE_NAME }}|${{ env.NGINX_IMAGE_NAME }}" || true
