@@ -1,111 +1,99 @@
-## Compose sample application
+## Prueba Tecnica Devops
+
 
 ## Node.js application with Nginx proxy and Redis database
-
-
-![Texto alternativo](./docs/img/Jobs%20Successfully.jpeg)
 
 Project structure:
 ```
 .
-├── README.md
-├── compose.yaml
-├── nginx
-│   ├── Dockerfile
-│   └── nginx.conf
-└── web
-    ├── Dockerfile
-    ├── package.json
-    └── server.js
-
-2 directories, 7 files
-
-
-```
-[_compose.yaml_](compose.yaml)
-```
-redis:
-    image: 'redislabs/redismod'
-    ports:
-      - '6379:6379'
-  web1:
-    restart: on-failure
-    build: ./web
-    hostname: web1
-    ports:
-      - '81:5000'
-  web2:
-    restart: on-failure
-    build: ./web
-    hostname: web2
-    ports:
-      - '82:5000'
-  nginx:
-    build: ./nginx
-    ports:
-    - '80:80'
-    depends_on:
-    - web1
-    - web2
-```
-The compose file defines an application with four services `redis`, `nginx`, `web1` and `web2`.
-When deploying the application, docker compose maps port 80 of the nginx service container to port 80 of the host as specified in the file.
-
-
-> ℹ️ **_INFO_**  
-> Redis runs on port 6379 by default. Make sure port 6379 on the host is not being used by another container, otherwise the port should be changed.
-
-## Deploy with docker compose
+└── nginx-nodejs-redis
+    ├── README.md
+    ├── compose.yaml
+    ├── docs
+    │   └── img
+    │       └── Jobs Successfully.jpeg
+    ├── environment
+    │   ├── ingress.yml
+    │   ├── namespace.yml
+    │   ├── nginx-deployment.yml
+    │   ├── nginx-service.yml
+    │   ├── redis-deployment.yml
+    │   ├── redis-service.yml
+    │   ├── web-deployment.yml
+    │   └── web-service.yml
+    ├── nginx
+    │   ├── Dockerfile
+    │   └── nginx.conf
+    ├── package-lock.json
+    ├── sonar-project.properties
+    └── web
+        ├── Dockerfile
+        ├── app.js
+        ├── app.test.js
+        ├── package-lock.json
+        ├── package.json
+        ├── server.js
+        └── server.test.js
 
 ```
-$ docker compose up -d
-[+] Running 24/24
- ⠿ redis Pulled                                                                                                                                                                                                                      ...
-   ⠿ 565225d89260 Pull complete                                                                                                                                                                                                      
-[+] Building 2.4s (22/25)
- => [nginx-nodejs-redis_nginx internal] load build definition from Dockerfile                                                                                                                                                         ...
-[+] Running 5/5
- ⠿ Network nginx-nodejs-redis_default    Created                                                                                                                                                                                      
- ⠿ Container nginx-nodejs-redis-web2-1   Started                                                                                                                                                                                      
- ⠿ Container nginx-nodejs-redis-redis-1  Started                                                                                                                                                                                      
- ⠿ Container nginx-nodejs-redis-web1-1   Started                                                                                                                                                                                      
- ⠿ Container nginx-nodejs-redis-nginx-1  Started
+## Análisis con SonarQube
 ```
+SonarQube fue utilizado para realizar análisis estático de código y validar la calidad de la aplicación Node.js.
 
+Como parte de la prueba técnica, se ejecutaron dos escenarios solicitados:
 
-## Expected result
+1. Un escenario con análisis fallido❌.
+2. Un escenario con análisis exitoso✅.
 
-Listing containers must show three containers running and the port mapping as below:
+## Análisis fallido con SonarQube ❌
 
+Para cumplir con el requerimiento de la prueba técnica, se generó intencionalmente un escenario donde el análisis de SonarQube fallara o reportara issues de calidad sobre el código fuente.
 
-```
-docker-compose ps
-```
+El objetivo de este escenario fue demostrar que SonarQube estaba correctamente configurado y que era capaz de detectar problemas de calidad en el código de la aplicación Node.js.
 
-## Testing the app
+![SonarQube Failed](./docs/img/sonarqube_failed.jpeg)
 
-After the application starts, navigate to `http://localhost:80` in your web browser or run:
+Causa de fallo❌
+
+Para provocar el fallo, se modificó el archivo `web/app.js`, eliminando el uso de la clase `Number`.
+
+![SonarQube Failed Cause](./docs/img/sonarqube_failed_cause.jpeg)
 
 ```
-curl localhost:80
-curl localhost:80
-web1: Total number of visits is: 1
-```
+```javascript
+// Código que provocó issues en SonarQube
+parseInt()
+isNaN()
+
+// Código recomendado por SonarQube
+Number.parseInt()
+Number.isNaN()
 
 ```
-curl localhost:80
-web1: Total number of visits is: 2
-```
-```
-$ curl localhost:80
-web2: Total number of visits is: 3
-```
 
+## Construcción y publicación de imágenes Docker
 
+El pipeline construye las imágenes Docker de la aplicación y las publica en DockerHub.
 
-## Stop and remove the containers
+Se generaron dos imágenes:
 
-```
-$ docker compose down
+```text
+tomasgonzalez0016/devops-web:latest
+tomasgonzalez0016/devops-nginx:latest
+
+![img dockerhub](./docs/img/repos_dockerhub.png)
 ```
 
+## Scripts ejecutados en el pipeline
+
+Como parte de la prueba técnica, el pipeline ejecuta dos scripts en Bash:
+
+- Impresión de `Hola Mundo` 10 veces usando un job paralelo.
+- Creación de 10 archivos con la fecha actual y posterior impresión de su contenido en consola.
+
+### Job paralelo - Hola Mundo y 
+
+Se configuró un job paralelo en el pipeline para imprimir el mensaje `Hola Mundo` 10 veces en la consola y crear los 10 archivos con la fecha actual
+
+![Hola Mundo](./docs/img/10_hello.png)
+![files](./docs/img/10_files.png)
