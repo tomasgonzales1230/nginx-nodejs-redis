@@ -146,3 +146,45 @@ jobs:
           echo "Imágenes generadas:"
           docker images | grep -E "${{ env.WEB_IMAGE_NAME }}|${{ env.NGINX_IMAGE_NAME }}" || true
           
+  hello-world-parallel:
+    name: Hola Mundo parallel job
+    runs-on: self-hosted
+    needs: docker-build-push
+
+    strategy:
+      matrix:
+        instance: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Print Hola Mundo
+        run: |
+          echo "Hola Mundo desde job paralelo número: ${{ matrix.instance }}"
+
+  create-date-files:
+    name: Create 10 files with date
+    runs-on: self-hosted
+    needs: hello-world-parallel
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create and print date files
+        run: |
+          mkdir -p generated-files
+
+          for i in {1..10}
+          do
+            current_date=$(date)
+            file_name="generated-files/date-file-$i.txt"
+
+            echo "$current_date" > "$file_name"
+
+            echo "Archivo creado: $file_name"
+            echo "Contenido del archivo:"
+            cat "$file_name"
+            echo "-----------------------------"
+          done
