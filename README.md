@@ -1,7 +1,15 @@
 ## Prueba Tecnica Devops
+> [!IMPORTANT]
+> Inicialmente intenté utilizar Azure DevOps o un entorno en la nube como Azure/AWS, tal como se solicitaba en la prueba técnica.  
+> Sin embargo, tuve problemas de acceso y no me fue posible iniciar una cuenta en dichas plataformas.
+>
+> Por cuestiones de tiempo, decidí proceder con **GitHub Actions utilizando un runner self-hosted** como alternativa para implementar el pipeline CI/CD.  
+> Esta solución me permitió cumplir con el flujo requerido: ejecución de tests, análisis con SonarQube, construcción y publicación de imágenes Docker, ejecución de scripts y despliegue en Kubernetes con Minikube.
+## Descripción del proyecto
 
+Este proyecto utiliza una aplicación basada en Node.js, Redis y Nginx.
 
-## Node.js application with Nginx proxy and Redis database
+La aplicación web incrementa un contador de visitas almacenado en Redis y Nginx funciona como reverse proxy hacia la aplicación Node.js.
 
 Project structure:
 ```
