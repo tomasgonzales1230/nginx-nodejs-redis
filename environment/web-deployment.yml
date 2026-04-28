@@ -20,7 +20,7 @@ spec:
           image: tomasgonzalez0016/devops-web:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 3000
+            - containerPort: 5000
           env:
             - name: REDIS_HOST
               value: redis-service
