@@ -2,6 +2,9 @@
 
 ## Node.js application with Nginx proxy and Redis database
 
+
+![Texto alternativo](docs/img/Jobs Successfully.jpeg)
+
 Project structure:
 ```
 .
