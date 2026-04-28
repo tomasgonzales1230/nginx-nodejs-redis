@@ -1,9 +1,9 @@
-FROM node:14.17.3-alpine3.14
+FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 COPY ./server.js ./
 
 CMD ["npm","start"]
